@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.content_note_list.*
 
 class NoteListActivity : AppCompatActivity() {
@@ -20,6 +21,8 @@ class NoteListActivity : AppCompatActivity() {
             val activityIntent = Intent(this, NoteActivity::class.java)
             startActivity(activityIntent)
         }
+
+        listitems.layoutManager = LinearLayoutManager(this)
 
         // remove old listview code
 //        listNotes.adapter = ArrayAdapter(this,
