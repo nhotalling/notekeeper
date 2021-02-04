@@ -2,7 +2,6 @@ package com.gfd.notekeeper
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +21,9 @@ class NoteListActivity : AppCompatActivity() {
             startActivity(activityIntent)
         }
 
+        // listitems = recyclerView
         listitems.layoutManager = LinearLayoutManager(this)
+        listitems.adapter = NoteRecyclerAdapter(this, DataManager.notes)
 
         // remove old listview code
 //        listNotes.adapter = ArrayAdapter(this,

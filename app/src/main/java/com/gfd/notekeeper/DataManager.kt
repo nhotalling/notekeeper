@@ -29,9 +29,15 @@ object DataManager {
     }
 
     private fun initializeNotes() {
-        val note = NoteInfo(courses.getValue("android_intents"),
-            "My Note",
+        var note = NoteInfo(courses.getValue("android_intents"),
+            "Default Note",
             "Lorem Ipsum"
+        )
+        notes.add(note)
+
+        note = NoteInfo(courses.getValue("java_core"),
+            "Default Note 2",
+            "Lorem Ipsum 2"
         )
         notes.add(note)
     }

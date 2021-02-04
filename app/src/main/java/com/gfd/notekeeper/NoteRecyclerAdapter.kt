@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class NoteRecyclerAdapter(private val context: Context) :
+class NoteRecyclerAdapter(private val context: Context, private val notes: List<NoteInfo>) :
     RecyclerView.Adapter<NoteRecyclerAdapter.ViewHolder>() {
 
     private val layoutInflater = LayoutInflater.from(context)
@@ -21,11 +21,21 @@ class NoteRecyclerAdapter(private val context: Context) :
         return ViewHolder(itemView)
     }
 
+    // display the data
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val note = notes[position]
+
+        holder.textCourse?.text = note.course?.title
+        holder.textTitle?.text = note.title
     }
 
-    override fun getItemCount(): Int {
-    }
+    // how much data overall should be displayed
+    // shorthand syntax:
+    override fun getItemCount() = notes.size
+    // which is the same as:
+//    override fun getItemCount(): Int {
+//        return notes.size
+//    }
 
     // on demo, View was nullable (View?) but it seems our base class
     // RecyclerView.ViewHolder() does not like a nullable passed in as its param
