@@ -22,8 +22,8 @@ class NoteListActivity : AppCompatActivity() {
         }
 
         // listitems = recyclerView
-        listitems.layoutManager = LinearLayoutManager(this)
-        listitems.adapter = NoteRecyclerAdapter(this, DataManager.notes)
+        listitemsOrig.layoutManager = LinearLayoutManager(this)
+        listitemsOrig.adapter = NoteRecyclerAdapter(this, DataManager.notes)
 
         // remove old listview code
 //        listNotes.adapter = ArrayAdapter(this,
@@ -50,6 +50,6 @@ class NoteListActivity : AppCompatActivity() {
         // This method is okay for small data sets
         // but there are more efficient ways, like telling it
         // which items were updated.
-        listitems.adapter?.notifyDataSetChanged()
+        listitemsOrig.adapter?.notifyDataSetChanged()
     }
 }
