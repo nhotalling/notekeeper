@@ -41,9 +41,15 @@ class NoteListActivity : AppCompatActivity() {
 
     // This activity was created using an adapter that knows about a certain
     // number of notes. We need to create a new adapter if the number of items
-    // in the list change
+    // in the list changes.
     override fun onResume() {
         super.onResume()
+        // this was for original ListView
         //(listNotes.adapter as ArrayAdapter<NoteInfo>).notifyDataSetChanged()
+        // this is for recyclerview
+        // This method is okay for small data sets
+        // but there are more efficient ways, like telling it
+        // which items were updated.
+        listitems.adapter?.notifyDataSetChanged()
     }
 }
