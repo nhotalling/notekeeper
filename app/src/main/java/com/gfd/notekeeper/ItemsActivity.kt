@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_items.*
 
 // Navigation Drawer
@@ -82,19 +83,25 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
         listItems.adapter?.notifyDataSetChanged()
     }
 
+    // single method that gets called when user makes a change
+    // inside the NavigationView
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_gallery -> {
-
+            R.id.nav_notes -> {
+                handleSection("Notes")
             }
-            R.id.nav_slideshow -> {
-
+            R.id.nav_courses -> {
+                handleSection("Courses")
             }
         }
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun handleSection(message: String) {
+        Snackbar.make(listItems, message, Snackbar.LENGTH_LONG).show()
     }
 }
