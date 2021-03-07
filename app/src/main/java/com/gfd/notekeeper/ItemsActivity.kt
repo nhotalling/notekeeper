@@ -24,6 +24,23 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
+    // It's a good practice to make any property with a 'this' reference
+    // into a lazy property
+    // private val noteLayoutManager = LinearLayoutManager(this)
+    private val noteLayoutManager by lazy {
+        LinearLayoutManager(this)
+    }
+
+    // must delay creation of NoteRecyclerAdapter until after onCreate is called
+    // when using vals, you can create lazy property.
+    // 'by lazy' will not created until it is used
+    // This original implementation will not work - system services not available
+    // to Activities before onCreate (I think 'this' is not available yet)
+    //private val noteRecyclerAdapter = NoteRecyclerAdapter(this, DataManager.notes)
+    private val noteRecyclerAdapter by lazy {
+        NoteRecyclerAdapter(this, DataManager.notes)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_items)
@@ -37,8 +54,8 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
 
         // listItems = new RecyclerView added to content_items (old one is named 'listitems' lowercase i)
         // why the heck are they reusing the same id
-        listItems.layoutManager = LinearLayoutManager(this)
-        listItems.adapter = NoteRecyclerAdapter(this, DataManager.notes)
+        listItems.layoutManager = noteLayoutManager
+        listItems.adapter = noteRecyclerAdapter
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
