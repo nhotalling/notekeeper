@@ -12,8 +12,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_items.*
 import kotlinx.android.synthetic.main.content_items.*
 
 // Navigation Drawer
@@ -41,6 +43,14 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
         NoteRecyclerAdapter(this, DataManager.notes)
     }
 
+    private val courseLayoutManager by lazy {
+        GridLayoutManager(this, 2)
+    }
+
+    private val courseRecyclerAdapter by lazy {
+        CourseRecyclerAdapter(this, DataManager.courses.values.toList())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_items)
@@ -52,10 +62,7 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
             startActivity(Intent(this, NoteActivity::class.java))
         }
 
-        // listItems = new RecyclerView added to content_items (old one is named 'listitems' lowercase i)
-        // why the heck are they reusing the same id
-        listItems.layoutManager = noteLayoutManager
-        listItems.adapter = noteRecyclerAdapter
+        displayNotes()
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
@@ -84,6 +91,21 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
 //        navView.setupWithNavController(navController)
     }
 
+    private fun displayNotes() {
+        // listItems = new RecyclerView added to content_items (old one is named 'listitems' lowercase i)
+        listItems.layoutManager = noteLayoutManager
+        listItems.adapter = noteRecyclerAdapter
+
+        // set active selection on Navigation View
+        nav_view.menu.findItem(R.id.nav_notes).isChecked = true
+    }
+
+    private fun displayCourses() {
+        listItems.layoutManager = courseLayoutManager
+        listItems.adapter = courseRecyclerAdapter
+        nav_view.menu.findItem(R.id.nav_courses).isChecked = true
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.items, menu)
@@ -106,10 +128,10 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_notes -> {
-                handleSection("Notes")
+                displayNotes()
             }
             R.id.nav_courses -> {
-                handleSection("Courses")
+                displayCourses()
             }
         }
 
