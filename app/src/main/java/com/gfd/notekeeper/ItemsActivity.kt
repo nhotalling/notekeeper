@@ -12,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -62,6 +63,10 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
             startActivity(Intent(this, NoteActivity::class.java))
         }
 
+        // deprecated - use constructors of ViewModelProvider directly
+        // val vm = ViewModelProviders.of(this)
+        // TODO - research how to use new version of VMProvider
+        //val vm = ViewModelProvider.
         displayNotes()
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
