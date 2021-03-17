@@ -2,8 +2,10 @@ package com.gfd.notekeeper
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -12,7 +14,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -52,6 +53,10 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
         CourseRecyclerAdapter(this, DataManager.courses.values.toList())
     }
 
+    // This viewModel will not be enough to persist state if the activity is destroyed
+    // by viewModels is a lazy property, which is what we want
+    private val viewModel: ItemsActivityViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_items)
@@ -65,9 +70,17 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
 
         // deprecated - use constructors of ViewModelProvider directly
         // val vm = ViewModelProviders.of(this)
-        // TODO - research how to use new version of VMProvider
-        //val vm = ViewModelProvider.
-        displayNotes()
+
+        // Use the 'by viewModels()' Kotlin property delegate
+        // from the activity-ktx artifact
+        // val vm: ItemsActivityViewModel by viewModels()
+        // extract vm as a property to be accessed elsewhere
+
+        if(savedInstanceState != null) {
+            viewModel.navDrawerDisplaySelection = savedInstanceState.getInt(viewModel.navDrawerDisplaySelectionName)
+        }
+
+        handleDisplaySelection(viewModel.navDrawerDisplaySelection)
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
@@ -94,6 +107,16 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
 //        )
 //        setupActionBarWithNavController(navController, appBarConfiguration)
 //        navView.setupWithNavController(navController)
+    }
+
+    // stores viewmodel values inside state bundle so state
+    // can be restored if activity is destroyed and re-created
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        if(outState != null) {
+            outState.putInt(viewModel.navDrawerDisplaySelectionName, viewModel.navDrawerDisplaySelection)
+        }
     }
 
     private fun displayNotes() {
@@ -131,7 +154,16 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
     // inside the NavigationView
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
-        when (item.itemId) {
+        handleDisplaySelection(item.itemId)
+        viewModel.navDrawerDisplaySelection = item.itemId
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    fun handleDisplaySelection(itemId: Int) {
+        when (itemId) {
             R.id.nav_notes -> {
                 displayNotes()
             }
@@ -139,10 +171,6 @@ class ItemsActivity : AppCompatActivity(),  NavigationView.OnNavigationItemSelec
                 displayCourses()
             }
         }
-
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        drawerLayout.closeDrawer(GravityCompat.START)
-        return true
     }
 
     private fun handleSection(message: String) {
